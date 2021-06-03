@@ -1,6 +1,7 @@
 package learning_tests
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -27,6 +28,18 @@ func TestAdd(t *testing.T) {
 		expected := 212
 		if sum != expected {
 			t.Errorf("expected '%d' but got '%d", expected, sum)
+		}
+	})
+}
+
+func TestAddAll(t *testing.T) {
+	t.Run("two arrays", func(t *testing.T) {
+		got := AddAll([]int{1, 2}, []int{0, 9})
+		expected := []int{3, 9}
+
+		// NOTE
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected '%d' but got '%d", expected, got)
 		}
 	})
 }
