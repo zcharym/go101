@@ -4,9 +4,16 @@ import "fmt"
 
 func main() {
 	user := "Alex"
-	fmt.Println(greeting(user))
+	lang := "Chinese"
+	fmt.Println(greeting(user, lang))
 }
 
-func greeting(name string) string {
-	return "hello," + name
+func greeting(name, language string) string {
+	if name == "" {
+		name = "Tom"
+	}
+	if language == "" {
+		language = "Chinese"
+	}
+	return "hello, " + name + " in " + language
 }
