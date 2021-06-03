@@ -1,4 +1,4 @@
-package hello
+package learning_tests
 
 import "testing"
 

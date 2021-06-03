@@ -1,12 +1,4 @@
-package hello
-
-import "fmt"
-
-func main() {
-	user := "Alex"
-	lang := "Chinese"
-	fmt.Println(greeting(user, lang))
-}
+package learning_tests
 
 func greeting(name, language string) string {
 	if name == "" {
