@@ -19,5 +19,4 @@
 .vscode
 .idea
 .DS_Store
-
-
+tmp.go
