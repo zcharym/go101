@@ -21,4 +21,13 @@ func main() {
 	fmt.Println("zeroptr:", i)
 
 	fmt.Println("pointer:", &i)
+
+	p := new(int)
+	q := new(int)
+	fmt.Println(p == q)
+	fmt.Println(p, q)
+
+	var x, y int
+	fmt.Println(x == y)
+	fmt.Println(x, y)
 }
