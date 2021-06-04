@@ -12,6 +12,10 @@ type Circle struct {
 	radius float64
 }
 
+type Shape interface {
+	Area() float64
+}
+
 func Perimeter(rect Rectangle) float64 {
 	return 2 * (rect.width + rect.height)
 }
