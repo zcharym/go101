@@ -22,10 +22,14 @@ func (d Dictionary) Search(key string) (string, error) {
 }
 
 func (d Dictionary) Add(key string, value string) error {
-	_, ok := d[key]
-	if ok {
+	_, err := d.Search(key)
+	switch err {
+	case ErrorNotFound:
+		d[key] = value
+	case nil:
 		return ErrorAddedAlready
+	default:
+		return err
 	}
-	d[key] = value
 	return nil
 }
