@@ -16,11 +16,27 @@ func TestSearch(t *testing.T) {
 
 	t.Run("unknown word", func(t *testing.T) {
 		_, err := dict.Search("unknown")
-		want := "can't find the word"
+		expected := "can't find the word"
 		if err == nil {
 			t.Fatal("expected to get an error")
 		}
-		assertStrings(t, err.Error(), want)
+		assertStrings(t, err.Error(), expected)
+	})
+
+	t.Run("add already added word", func(t *testing.T) {
+		err := dict.Add("test", "definition for test")
+		expected := "word already added"
+		if err == nil {
+			t.Fatal("expected to get an erro")
+		}
+		assertStrings(t, err.Error(), expected)
+	})
+
+	t.Run("add  word", func(t *testing.T) {
+		dict.Add("test add", "definition for test")
+		expected := "definition for test"
+		got, _ := dict.Search("test add")
+		assertStrings(t, got, expected)
 	})
 }
 
