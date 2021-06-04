@@ -1,9 +1,13 @@
 package learning_tests
 
-func Perimeter(width, height float64) float64 {
-	return 2 * (width + height)
+type Rectangle struct {
+	width, height float64
 }
 
-func Area(width, height float64) float64 {
-	return width * height
+func Perimeter(rect Rectangle) float64 {
+	return 2 * (rect.width + rect.height)
+}
+
+func Area(rect Rectangle) float64 {
+	return rect.width * rect.height
 }
