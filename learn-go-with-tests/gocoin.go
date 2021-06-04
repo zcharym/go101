@@ -1,6 +1,7 @@
 package learning_tests
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,8 +19,12 @@ func (w *Wallet) Deposit(m Dogecoin) {
 	w.balance += m
 }
 
-func (w *Wallet) Withdraw(m Dogecoin) {
+func (w *Wallet) Withdraw(m Dogecoin) error {
+	if m > w.balance {
+		return errors.New("insufficient fund")
+	}
 	w.balance -= m
+	return nil
 }
 
 func (w *Wallet) Balance() Dogecoin {
