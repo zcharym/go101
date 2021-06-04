@@ -38,6 +38,13 @@ func TestSearch(t *testing.T) {
 		got, _ := dict.Search("test add")
 		assertStrings(t, got, expected)
 	})
+
+	t.Run("test  update", func(t *testing.T) {
+		newText := "newText item"
+		dict.Update("test", newText)
+		expected, _ := dict.Search("test")
+		assertStrings(t, expected, newText)
+	})
 }
 
 func assertStrings(t *testing.T, got, expected string) {
