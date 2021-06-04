@@ -5,13 +5,14 @@ import (
 )
 
 func TestWallet(t *testing.T) {
-	wallet := Wallet{balance: 10}
+	wallet := Wallet{balance: Dogecoin(10)}
 	wallet.Deposit(10.0)
+	wallet.Withdraw(4.0)
 	got := wallet.Balance()
-	expected := Dogecoin(20)
+	expected := Dogecoin(16)
 
 	if got != expected {
-		t.Errorf("got '%.2f' expect '%.2f'", got, expected)
+		t.Errorf("got '%.3f' expect '%.3f'", got, expected)
 	}
 
 }

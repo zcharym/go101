@@ -10,12 +10,22 @@ type Wallet struct {
 	balance Dogecoin
 }
 
+type Stringer interface {
+	String() string
+}
+
 func (w *Wallet) Deposit(m Dogecoin) {
-	fmt.Printf("address:%p\n", &w)
 	w.balance += m
 }
 
+func (w *Wallet) Withdraw(m Dogecoin) {
+	w.balance -= m
+}
+
 func (w *Wallet) Balance() Dogecoin {
-	fmt.Printf("address:%p\n", &w)
 	return w.balance
+}
+
+func (d Dogecoin) String() string {
+	return fmt.Sprintf("%.3f DOGE", d)
 }
