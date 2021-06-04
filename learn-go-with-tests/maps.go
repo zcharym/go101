@@ -1,13 +1,17 @@
 package learning_tests
 
-import (
-	"errors"
-)
-
 type Dictionary map[string]string
 
-var ErrorNotFound = errors.New("can't find the word")
-var ErrorAddedAlready = errors.New("word already added")
+type DictionaryErr string
+
+func (e DictionaryErr) Error() string {
+	return string(e)
+}
+
+const (
+	ErrorNotFound     = DictionaryErr("can't find the word")
+	ErrorAddedAlready = DictionaryErr("word already added")
+)
 
 func (d Dictionary) Search(key string) (string, error) {
 	word, ok := d[key]
