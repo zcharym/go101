@@ -6,10 +6,12 @@ import (
 
 type Dictionary map[string]string
 
+var ErrorNotFound = errors.New("can't find the word")
+
 func (d Dictionary) Search(key string) (string, error) {
 	word, ok := d[key]
 	if !ok {
-		return "", errors.New("can't find the word")
+		return "", ErrorNotFound
 	}
 	return word, nil
 }
