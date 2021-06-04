@@ -45,6 +45,14 @@ func TestSearch(t *testing.T) {
 		expected, _ := dict.Search("test")
 		assertStrings(t, expected, newText)
 	})
+
+	t.Run("test  delete", func(t *testing.T) {
+		dict.Delete("test")
+		_, err := dict.Search("test")
+		if err != ErrorNotFound {
+			t.Errorf("Expected '%s' to be deleted", "test")
+		}
+	})
 }
 
 func assertStrings(t *testing.T, got, expected string) {

@@ -49,3 +49,7 @@ func (d Dictionary) Update(key string, value string) error {
 
 	return nil
 }
+
+func (d Dictionary) Delete(key string) {
+	delete(d, key)
+}
