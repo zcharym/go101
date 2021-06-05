@@ -9,6 +9,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -38,13 +39,8 @@ func loadPage(title string) (*Page, error) {
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	fmt.Printf("%s", title)
-	p, err := loadPage(title)
-	t, err := template.ParseFiles("./intro/web_app_view.html")
-	if err != nil {
-		fmt.Printf("can't find template path")
-	} else {
-		t.Execute(w, p)
-	}
+	p, _ := loadPage(title)
+	renderTemplate(w, "web_app_view", p)
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,14 +55,17 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		p = &Page{Title: title}
 	}
-	// t, err := template.ParseFiles("./intro/web_app_edit.html")
-	t, err := template.ParseFiles("./intro/web_app_edit.html")
-	if err != nil {
-		fmt.Printf("can't find template path")
-	} else {
-		t.Execute(w, p)
-	}
+	renderTemplate(w, "web_app_edit", p)
+}
 
+func renderTemplate(w http.ResponseWriter, tmp string, p *Page) {
+	filename := "./intro/" + tmp + ".html"
+	// AMEND error handling
+	t, err := template.ParseFiles(filename)
+	if err != nil {
+		errors.New("file path not found")
+	}
+	t.Execute(w, p)
 }
 
 func main() {
