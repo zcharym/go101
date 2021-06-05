@@ -9,7 +9,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -38,8 +37,11 @@ func loadPage(title string) (*Page, error) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
-	fmt.Printf("%s", title)
-	p, _ := loadPage(title)
+	p, err := loadPage(title)
+	if err != nil {
+		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
+		return
+	}
 	renderTemplate(w, "web_app_view", p)
 }
 
@@ -47,7 +49,15 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintf(w, "<h1>Not Found</h1>")
 }
 func saveHandler(w http.ResponseWriter, r *http.Request) {
-	_, _ = fmt.Fprintf(w, "<h1>Not Found</h1>")
+	title := r.URL.Path[len("/save/"):]
+	body := r.FormValue("body")
+	p := &Page{Title: title, Body: []byte(body)}
+	err := p.save()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
 func editHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/edit/"):]
@@ -60,12 +70,15 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 
 func renderTemplate(w http.ResponseWriter, tmp string, p *Page) {
 	filename := "./intro/" + tmp + ".html"
-	// AMEND error handling
 	t, err := template.ParseFiles(filename)
 	if err != nil {
-		errors.New("file path not found")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	t.Execute(w, p)
+	err = t.Execute(w, p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func main() {
