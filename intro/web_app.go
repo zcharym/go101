@@ -10,7 +10,10 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 type Page struct {
@@ -18,12 +21,12 @@ type Page struct {
 	Body  []byte // not string, for io lib use convenience
 }
 
-func (p *Page) Save() error {
+func (p *Page) save() error {
 	filename := p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
-func LoadPage(title string) (*Page, error) {
+func loadPage(title string) (*Page, error) {
 	filename := title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -32,12 +35,44 @@ func LoadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
-func main() {
-	p1 := &Page{Title: "TestPage", Body: []byte("This is a sample Page.")}
-	err := p1.Save()
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/view/"):]
+	fmt.Printf("%s", title)
+	p, err := loadPage(title)
+	t, err := template.ParseFiles("./intro/web_app_view.html")
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("can't find template path")
+	} else {
+		t.Execute(w, p)
 	}
-	p2, _ := LoadPage("TestPage")
-	fmt.Println(string(p2.Body))
+}
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	_, _ = fmt.Fprintf(w, "<h1>Not Found</h1>")
+}
+func saveHandler(w http.ResponseWriter, r *http.Request) {
+	_, _ = fmt.Fprintf(w, "<h1>Not Found</h1>")
+}
+func editHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/edit/"):]
+	p, err := loadPage(title)
+	if err != nil {
+		p = &Page{Title: title}
+	}
+	// t, err := template.ParseFiles("./intro/web_app_edit.html")
+	t, err := template.ParseFiles("./intro/web_app_edit.html")
+	if err != nil {
+		fmt.Printf("can't find template path")
+	} else {
+		t.Execute(w, p)
+	}
+
+}
+
+func main() {
+	http.HandleFunc("/view/", viewHandler)
+	http.HandleFunc("/edit/", editHandler)
+	http.HandleFunc("/save/", saveHandler)
+	http.HandleFunc("/", notFoundHandler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
