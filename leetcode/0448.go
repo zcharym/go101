@@ -12,3 +12,18 @@ func findDisappearedNumbers(nums []int) (result []int) {
 	}
 	return
 }
+
+// better solution:
+func findDisappearedNumbersV2(nums []int) []int {
+	n := len(nums)
+	for _, num := range nums {
+		nums[(num-1)%n] += n
+	}
+	res := make([]int, 0, n)
+	for index, num := range nums {
+		if num <= n {
+			res = append(res, index+1)
+		}
+	}
+	return res
+}
