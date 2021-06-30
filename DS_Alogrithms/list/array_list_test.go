@@ -2,200 +2,326 @@ package list
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 )
 
-func TestSqList_Get(t *testing.T) {
-	type fields struct {
-		data   []elementType
-		length int
+func TestListNew(t *testing.T) {
+	list1 := New()
+
+	if actualValue := list1.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-	type args struct {
-		index int
+
+	list2 := New(1, "b")
+
+	if actualValue := list2.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    interface{}
-		wantErr bool
-	}{
-		{"empty sqlist",
-			fields{[]elementType{}, 0},
-			args{4},
-			nil,
-			true,
-		}, {"case 2",
-			fields{[]elementType{1, 2, 3}, 3},
-			args{4},
-			nil,
-			true,
-		}, {"case 3",
-			fields{[]elementType{1, 2, 3, 4, 5}, 5},
-			args{4},
-			elementType(5),
-			false,
-		}, {"case 4",
-			fields{[]elementType{}, 0},
-			args{-1},
-			nil,
-			true,
-		},
+
+	if actualValue, ok := list2.Get(0); actualValue != 1 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 1)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := SqList{
-				data:   tt.fields.data,
-				length: tt.fields.length,
-			}
-			got, err := s.Get(tt.args.index)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Get() got = %v[type: %T], want %v[type: %T]", got, got, tt.want, tt.want)
-			}
-		})
+
+	if actualValue, ok := list2.Get(1); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
+	}
+
+	if actualValue, ok := list2.Get(2); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 }
 
-func TestSqList_Add(t *testing.T) {
-	type fields struct {
-		data   []elementType
-		length int
+func TestListAdd(t *testing.T) {
+	list := New()
+	list.Add("a")
+	list.Add("b", "c")
+	if actualValue := list.Empty(); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-	type args struct {
-		values []elementType
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		{"case 1:emtpy list add", fields{[]elementType{}, 0}, args{[]elementType{1, 2, 3}}, false},
-		{"case 2:emtpy list add", fields{[]elementType{1}, 1}, args{[]elementType{1, 2, 3}}, false},
-		{"case 3:add empty list", fields{[]elementType{1}, 1}, args{[]elementType{}}, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &SqList{
-				data:   tt.fields.data,
-				length: tt.fields.length,
-			}
-			fmt.Println(s.length)
-			if err := s.Add(tt.args.values...); (err != nil) != tt.wantErr {
-				t.Errorf("Add() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			fmt.Println(s.length)
-		})
+	if actualValue, ok := list.Get(2); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
 	}
 }
 
-func TestSqList_FindByValue(t *testing.T) {
-	type fields struct {
-		data   []elementType
-		length int
+func TestListIndexOf(t *testing.T) {
+	list := New()
+
+	expectedIndex := -1
+	if index := list.IndexOf("a"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
-	type args struct {
-		elem elementType
+
+	list.Add("a")
+	list.Add("b", "c")
+
+	expectedIndex = 0
+	if index := list.IndexOf("a"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		wantIndex int
-		wantErr   bool
-	}{
-		{"case 1", fields{[]elementType{}, 0}, args{1}, -1, false},
-		{"case 2", fields{[]elementType{1, 2, 3}, 3}, args{1}, 0, false},
-		{"case 3", fields{[]elementType{1, 2, 3}, 3}, args{4}, -1, false},
-		{"case 4", fields{[]elementType{1, 2, 2, 3}, 4}, args{2}, 1, false},
+
+	expectedIndex = 1
+	if index := list.IndexOf("b"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := SqList{
-				data:   tt.fields.data,
-				length: tt.fields.length,
-			}
-			gotIndex, err := s.FindByValue(tt.args.elem)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("FindByValue() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if gotIndex != tt.wantIndex {
-				t.Errorf("FindByValue() gotIndex = %v, want %v", gotIndex, tt.wantIndex)
-			}
-		})
+
+	expectedIndex = 2
+	if index := list.IndexOf("c"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 }
 
-func TestSqList_Remove(t *testing.T) {
-	type fields struct {
-		data   []elementType
-		length int
+func TestListRemove(t *testing.T) {
+	list := New()
+	list.Add("a")
+	list.Add("b", "c")
+	list.Remove(2)
+	if actualValue, ok := list.Get(2); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
-	type args struct {
-		index int
+	list.Remove(1)
+	list.Remove(0)
+	list.Remove(0) // no effect
+	if actualValue := list.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		{"case 1", fields{[]elementType{}, 0}, args{1}, true},
-		{"case 2", fields{[]elementType{1, 2, 3}, 3}, args{4}, true},
-		{"case 3", fields{[]elementType{1, 2, 3}, 3}, args{1}, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &SqList{
-				data:   tt.fields.data,
-				length: tt.fields.length,
-			}
-			fmt.Println(s)
-			if err := s.Remove(tt.args.index); (err != nil) != tt.wantErr {
-				t.Errorf("Remove() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			fmt.Println(s)
-		})
+	if actualValue := list.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
 	}
 }
 
-func TestSqList_Insert(t *testing.T) {
-	type fields struct {
-		data   []elementType
-		length int
+func TestListGet(t *testing.T) {
+	list := New()
+	list.Add("a")
+	list.Add("b", "c")
+	if actualValue, ok := list.Get(0); actualValue != "a" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "a")
 	}
-	type args struct {
-		index int
-		value elementType
+	if actualValue, ok := list.Get(1); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		{"case 1", fields{[]elementType{1, 2, 3}, 3}, args{4, 1}, true},
-		{"case 2", fields{[]elementType{1, 2, 3}, 3}, args{1, 1}, false},
-		{"case 3", fields{[]elementType{1, 2, 3}, 3}, args{2, 4}, false},
-		{"case 4", fields{[]elementType{1, 2, 3}, 3}, args{0, 0}, false},
+	if actualValue, ok := list.Get(2); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := SqList{
-				data:   tt.fields.data,
-				length: tt.fields.length,
-			}
-			fmt.Println(s)
-			if err := s.Insert(tt.args.index, tt.args.value); (err != nil) != tt.wantErr {
-				t.Errorf("Insert() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			fmt.Println(s)
-		})
+	if actualValue, ok := list.Get(3); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
+	list.Remove(0)
+	if actualValue, ok := list.Get(0); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
+	}
+}
+
+func TestListClear(t *testing.T) {
+	list := New()
+	list.Add("e", "f", "g", "a", "b", "c", "d")
+	list.Clear()
+	if actualValue := list.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := list.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
+
+func TestListValues(t *testing.T) {
+	list := New()
+	list.Add("a")
+	list.Add("b", "c")
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s", list.Values()...), "abc"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestListInsert(t *testing.T) {
+	list := New()
+	list.Insert(0, "b", "c")
+	list.Insert(0, "a")
+	list.Insert(10, "x") // ignore
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	list.Insert(3, "d") // append
+	if actualValue := list.Size(); actualValue != 4 {
+		t.Errorf("Got %v expected %v", actualValue, 4)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", list.Values()...), "abcd"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestListSet(t *testing.T) {
+	list := New()
+	list.Set(0, "a")
+	list.Set(1, "b")
+	if actualValue := list.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	list.Set(2, "c") // append
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	list.Set(4, "d")  // ignore
+	list.Set(1, "bb") // update
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s", list.Values()...), "abbc"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func benchmarkGet(b *testing.B, list *SqList, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			list.Get(n)
+		}
+	}
+}
+
+func benchmarkAdd(b *testing.B, list *SqList, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			list.Add(n)
+		}
+	}
+}
+
+func benchmarkRemove(b *testing.B, list *SqList, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			list.Remove(n)
+		}
+	}
+}
+
+func BenchmarkArrayListGet100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkArrayListGet1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkArrayListGet10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkArrayListGet100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkArrayListAdd100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	list := New()
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkArrayListAdd1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkArrayListAdd10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkArrayListAdd100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkArrayListRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
+}
+
+func BenchmarkArrayListRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
+}
+
+func BenchmarkArrayListRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
+}
+
+func BenchmarkArrayListRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
 }
