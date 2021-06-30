@@ -1,9 +1,5 @@
 package list
 
-import (
-	"go101/DS_Alogrithms/common"
-)
-
 type SqList struct {
 	data   []interface{}
 	length int
@@ -17,56 +13,67 @@ func New(values ...interface{}) *SqList {
 	return sqList
 }
 
-func (s *SqList) Add(values ...interface{}) {
-	s.data = append(s.data, values...)
-	s.length += len(values)
+func (l *SqList) Add(values ...interface{}) {
+	l.data = append(l.data, values...)
+	l.length += len(values)
 }
 
-func (s *SqList) Insert(index int, value interface{}) error {
-	if index < 0 || index > s.length {
-		return common.InputError{}
+func (l *SqList) Get(index int) (interface{}, bool) {
+	if l.inRange(index) {
+		return l.data[index], true
 	}
-	for i := s.length - 1; i > index; i-- {
-		i := i
-		s.data[i-1] = s.data[i]
-	}
-	s.data[index] = value
-	s.length++
-	return nil
+	return nil, false
 }
 
-func (s SqList) FindByValue(elem interface{}) (index int, err error) {
-	for i := 0; i < s.length; i++ {
-		if s.data[i] == elem {
-			return i, nil
+func (l *SqList) Remove(index int) {
+	if !l.inRange(index) {
+		return
+	}
+	// AMEND c-style remove, not appropriate in go
+	for i := l.length; i > index; i-- {
+		l.data[i-1] = l.data[i]
+	}
+	l.data = l.data[:len(l.data)-1]
+	l.length--
+}
+
+func (l *SqList) Insert(index int, values ...interface{}) {
+	if !l.inRange(index) {
+		if index == l.length {
+			l.Add(values)
 		}
+		return
 	}
-	return -1, nil
+	l.data = append(l.data, values...)
+	l.length += len(values)
 }
 
-// Get TODO Exported method with the unexported return type
-func (s SqList) Get(index int) (interface{}, error) {
-	if index < 0 || index >= s.length {
-		return 0, common.InputError{}
+func (l *SqList) Set(index int, value interface{}) {
+	if !l.inRange(index) {
+		return
 	}
-	if s.length > 0 {
-		return s.data[index], nil
-	}
-	return 0, common.RangeError{}
+	l.data[index] = value
 }
 
-func (s *SqList) Remove(index int) error {
-	if index < 0 || index >= s.length {
-		return common.InputError{}
-	}
-	for i := index; i < s.length-1; i++ {
-		s.data[i] = s.data[i+1]
-	}
-	// change to initial value
-	s.data[s.length-1] = 0
-	return nil
+func (l *SqList) Empty() bool {
+	return l.length == 0
 }
 
-func (s SqList) Length() (length int) {
-	return s.length
+func (l *SqList) Size() int {
+	return l.length
+}
+
+func (l *SqList) Clear() {
+	l.length = 0
+	l.data = []interface{}{}
+}
+
+func (l *SqList) Values() []interface{} {
+	newList := make([]interface{}, l.length, l.length)
+	copy(newList, l.data[:l.length])
+	return newList
+}
+
+func (l *SqList) inRange(index int) bool {
+	return index >= 0 && index < l.length
 }
