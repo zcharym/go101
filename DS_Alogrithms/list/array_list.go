@@ -4,20 +4,18 @@ import (
 	"go101/DS_Alogrithms/common"
 )
 
-type elementType int
-
 type SqList struct {
-	data   []elementType
+	data   []common.ElementType
 	length int
 }
 
-func (s *SqList) Add(values ...elementType) error {
+func (s *SqList) Add(values ...common.ElementType) error {
 	s.length += len(values)
 	s.data = append(s.data, values...)
 	return nil
 }
 
-func (s *SqList) Insert(index int, value elementType) error {
+func (s *SqList) Insert(index int, value common.ElementType) error {
 	if index < 0 || index > s.length {
 		return common.InputError{}
 	}
@@ -30,7 +28,7 @@ func (s *SqList) Insert(index int, value elementType) error {
 	return nil
 }
 
-func (s SqList) FindByValue(elem elementType) (index int, err error) {
+func (s SqList) FindByValue(elem common.ElementType) (index int, err error) {
 	for i := 0; i < s.length; i++ {
 		if s.data[i] == elem {
 			return i, nil
@@ -40,7 +38,7 @@ func (s SqList) FindByValue(elem elementType) (index int, err error) {
 }
 
 // Get TODO Exported method with the unexported return type
-func (s SqList) Get(index int) (elementType, error) {
+func (s SqList) Get(index int) (common.ElementType, error) {
 	if index < 0 || index >= s.length {
 		return 0, common.InputError{}
 	}
