@@ -5,17 +5,24 @@ import (
 )
 
 type SqList struct {
-	data   []common.ElementType
+	data   []interface{}
 	length int
 }
 
-func (s *SqList) Add(values ...common.ElementType) error {
-	s.length += len(values)
-	s.data = append(s.data, values...)
-	return nil
+func New(values ...interface{}) *SqList {
+	sqList := &SqList{}
+	if len(values) > 0 {
+		sqList.Add(values)
+	}
+	return sqList
 }
 
-func (s *SqList) Insert(index int, value common.ElementType) error {
+func (s *SqList) Add(values ...interface{}) {
+	s.data = append(s.data, values...)
+	s.length += len(values)
+}
+
+func (s *SqList) Insert(index int, value interface{}) error {
 	if index < 0 || index > s.length {
 		return common.InputError{}
 	}
@@ -28,7 +35,7 @@ func (s *SqList) Insert(index int, value common.ElementType) error {
 	return nil
 }
 
-func (s SqList) FindByValue(elem common.ElementType) (index int, err error) {
+func (s SqList) FindByValue(elem interface{}) (index int, err error) {
 	for i := 0; i < s.length; i++ {
 		if s.data[i] == elem {
 			return i, nil
@@ -38,7 +45,7 @@ func (s SqList) FindByValue(elem common.ElementType) (index int, err error) {
 }
 
 // Get TODO Exported method with the unexported return type
-func (s SqList) Get(index int) (common.ElementType, error) {
+func (s SqList) Get(index int) (interface{}, error) {
 	if index < 0 || index >= s.length {
 		return 0, common.InputError{}
 	}
