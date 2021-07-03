@@ -7,5 +7,7 @@ import (
 type Queue interface {
 	EnQueue(value interface{})
 	DeQueue() (interface{}, bool)
+	Front() interface{}
+	Full() bool
 	common.Container
 }
