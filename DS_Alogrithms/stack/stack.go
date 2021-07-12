@@ -1,9 +1,12 @@
 package stack
 
+import (
+	"go101/DS_Alogrithms/common"
+)
+
 type Stack interface {
-	InitStack()
-	IsEmpty() (ok bool)
 	Push(value interface{})
-	Pop(elem interface{})
-	Peek(elem interface{})
+	Pop() (value interface{}, ok bool)
+	Peek() (value interface{}, ok bool)
+	common.Container
 }
