@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 type Movie struct {
@@ -15,14 +16,14 @@ type Movie struct {
 }
 
 type SuperHero struct {
-	Name           string
-	Age            int
-	SecretIdentity string
-	Powers         []string
+	Name           string   `json:"name"`
+	Age            int      `json:"age"`
+	SecretIdentity string   `json:"secretIdentity"`
+	Powers         []string `json:"powers"`
 }
 
 func (s SuperHero) String() string {
-	return s.String()
+	return fmt.Sprintf("name:[%s],age:[%d],powers:[%s]", s.Name, s.Age, strings.Join(s.Powers, ","))
 }
 
 var movies = []Movie{
@@ -38,7 +39,7 @@ func main() {
 	// marshal: struct to json
 	// data, err := json.Marshal(movies)
 	// with beautified format
-	data, err := json.MarshalIndent(movies, "", " ")
+	data, err := json.MarshalIndent(movies, "", "    ")
 
 	if err != nil {
 		log.Fatalf("JSON marshaling failed: %s", err)
@@ -54,7 +55,7 @@ func main() {
 
 	// unmarshal from file
 	str := parseJSONFile("./assets/json-sample.json")
-	fmt.Println(str)
+	fmt.Println("parsed json file:", str)
 }
 
 // JSON file parse
@@ -66,13 +67,12 @@ func parseJSONFile(dir string) (parsedStr string) {
 		fmt.Println(err)
 	}
 	var heroes []SuperHero
-
 	if err := json.Unmarshal(jsonFile, &heroes); err != nil {
 		log.Fatalf("JSON unmarshaling failed: %s", err)
 	}
-	// FIXME panic
-	// for _, hero := range heroes {
-	// 	parsedStr += hero.String() + "\n"
-	// }
+
+	for _, hero := range heroes {
+		parsedStr += hero.String() + "\n"
+	}
 	return
 }
