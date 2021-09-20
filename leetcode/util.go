@@ -8,3 +8,15 @@ func ArrayInsert(arr []int, index, value int) []int {
 	arr[index] = value
 	return arr
 }
+
+func TestSliceEqual(nums1, nums2 []int) bool {
+	if len(nums1) != len(nums2) {
+		return false
+	}
+	for i, v := range nums1 {
+		if v != nums2[i] {
+			return false
+		}
+	}
+	return true
+}
