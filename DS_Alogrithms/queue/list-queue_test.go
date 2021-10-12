@@ -6,7 +6,7 @@ import (
 )
 
 func TestCircularQueue_EnQueue(t *testing.T) {
-	queue := New(4)
+	queue := NewCircularQueue(4)
 	queue.EnQueue(2)
 	queue.EnQueue("3")
 
@@ -25,7 +25,7 @@ func TestCircularQueue_EnQueue(t *testing.T) {
 }
 
 func TestListQueue_All(t *testing.T) {
-	queue := New(4)
+	queue := NewCircularQueue(4)
 	queue.EnQueue(1)
 	queue.EnQueue(2)
 	queue.EnQueue(3)

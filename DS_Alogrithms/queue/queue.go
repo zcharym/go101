@@ -1,7 +1,7 @@
 package queue
 
 import (
-	"go101/DS_Alogrithms/common"
+	"github.com/zchary-ma/go101/DS_Alogrithms/common"
 )
 
 type Queue interface {

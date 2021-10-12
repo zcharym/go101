@@ -3,14 +3,14 @@ package common
 type ElementType int
 
 type Node struct {
-	val  ElementType
-	next *Node
+	Val  ElementType
+	Next *Node
 }
 
 type TwoPrtNode struct {
-	val  ElementType
-	next *TwoPrtNode
-	prev *TwoPrtNode
+	Val  ElementType
+	Next *TwoPrtNode
+	Prev *TwoPrtNode
 }
 
 type Container interface {

@@ -7,7 +7,7 @@ type CircularQueue struct {
 	size        int
 }
 
-func New(size int) *CircularQueue {
+func NewCircularQueue(size int) *CircularQueue {
 	// 多加一个单元，用于rear与front判断
 	q := make([]interface{}, size)
 	return &CircularQueue{
