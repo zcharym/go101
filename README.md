@@ -4,11 +4,11 @@ My Golang learning path including ds, simple app, leetcode, learn with tests, et
 
 ## directory
 
-- `backbone` implemented gadgets
+- `/backbone` implemented gadgets
 - `/build` directory of executable files
 - `/impl-ds` implemented data structure and algorithm
 - `/go-patterns` including design pattern and concurrency
-- `interview` useful interview questions with questions and snippets
+- `/interview` useful interview questions with questions and snippets
 - `/leetcode` leetcode snippets
 - `/tutorials` list of intuitive tutorials
 
