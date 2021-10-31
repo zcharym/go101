@@ -1,4 +1,0 @@
-this is context from text.
-another line.
-abc
-abc

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -12,14 +13,20 @@ func main() {
 	}
 	time.Sleep(time.Second * 4) // -> use chan to receive stop signal
 
+	timeout := time.After(time.Second * 1)
 	for j := 0; j < 5; j++ {
-		gopherId := <-c
-		fmt.Println("gopher", gopherId, "finished sleeping.")
+		select {
+		case gopherId := <-c:
+			fmt.Println("gopher", gopherId, "finished sleeping.")
+		case <-timeout:
+			fmt.Println("timeout")
+			return
+		}
+
 	}
 }
 
 func sleepyGophers(id int, c chan int) {
-	time.Sleep(time.Second * 3)
-	fmt.Printf("...[%d]snore...\n", id)
+	time.Sleep(time.Duration(rand.Intn(4000)+1000) * time.Millisecond)
 	c <- id
 }
