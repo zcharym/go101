@@ -1,8 +1,6 @@
 package queue
 
-import (
-	"github.com/zchary-ma/go101/DS_Alogrithms/common"
-)
+import "github.com/zchary-ma/go101/impl-ds/common"
 
 type LinkedListQueue struct {
 	front, rear *common.Node
