@@ -1,6 +1,6 @@
 package list
 
-import "github.com/zchary-ma/go101/impl-ds/common"
+import "github.com/zchary-ma/impl-ds/common"
 
 type List interface {
 	Get(index int) (interface{}, bool)
