@@ -1,7 +1,7 @@
 package stack
 
 import (
-	"github.com/zchary-ma/go101/DS_Alogrithms/list"
+	"github.com/zchary-ma/impl-ds/list"
 )
 
 type ArrayStack struct {

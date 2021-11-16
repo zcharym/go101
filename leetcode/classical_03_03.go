@@ -23,76 +23,74 @@ func NewStackOfPlates(cap int) StackOfPlates {
 	return sp
 }
 
-func (this *StackOfPlates) Push(val int) {
-	//fmt.Println("PUSH", val)
-	if this.stackSize == 0 {
+func (s *StackOfPlates) Push(val int) {
+	if s.stackSize == 0 {
 		return
 	}
-	if this.idx == len(this.stacks) {
-		this.stacks = append(this.stacks, &Stack{
-			nums: make([]int, this.stackSize),
+	if s.idx == len(s.stacks) {
+		s.stacks = append(s.stacks, &Stack{
+			nums: make([]int, s.stackSize),
 			pop:  0,
 		})
 	}
-	curStack := this.stacks[this.idx]
+	curStack := s.stacks[s.idx]
 	curStack.nums[curStack.pop] = val
 	curStack.pop++
-	if curStack.pop == this.stackSize {
-		this.idx++
+	if curStack.pop == s.stackSize {
+		s.idx++
 	}
 }
 
-func (this *StackOfPlates) Pop() int {
+func (s *StackOfPlates) Pop() int {
 	//fmt.Println("POP")
-	if this.stackSize == 0 {
+	if s.stackSize == 0 {
 		return -1
 	}
-	i := this.idx
+	i := s.idx
 	for ; i >= 0; i-- {
-		if i == len(this.stacks) {
+		if i == len(s.stacks) {
 			continue
 		}
-		if this.stacks[i].pop != 0 {
+		if s.stacks[i].pop != 0 {
 			break
 		}
 	}
 	if i < 0 {
-		this.idx = 0
-		this.stacks = this.stacks[:0]
+		s.idx = 0
+		s.stacks = s.stacks[:0]
 		return -1
 	}
-	targetStack := this.stacks[i]
+	targetStack := s.stacks[i]
 	ret := targetStack.nums[targetStack.pop-1]
 	targetStack.pop--
 	if targetStack.pop == 0 {
-		this.stacks = this.stacks[:i]
-		if i > 0 && this.stacks[i-1].pop < this.stackSize {
-			this.idx = i - 1
+		s.stacks = s.stacks[:i]
+		if i > 0 && s.stacks[i-1].pop < s.stackSize {
+			s.idx = i - 1
 		} else {
-			this.idx = i
+			s.idx = i
 		}
 	}
 	return ret
 }
 
-func (this *StackOfPlates) PopAt(index int) int {
-	//fmt.Println("POP AT", index)
-	if this.stackSize == 0 {
+func (s *StackOfPlates) PopAt(index int) int {
+	if s.stackSize == 0 {
 		return -1
 	}
-	n := len(this.stacks)
+	n := len(s.stacks)
 	if index < 0 || index >= n {
 		return -1
 	}
-	curStack := this.stacks[index]
+	curStack := s.stacks[index]
 	ret := curStack.nums[curStack.pop-1]
 	curStack.pop--
 	if curStack.pop == 0 {
-		if index < this.idx {
-			this.idx--
-			this.stacks = append(this.stacks[:index], this.stacks[index+1:]...)
+		if index < s.idx {
+			s.idx--
+			s.stacks = append(s.stacks[:index], s.stacks[index+1:]...)
 		} else {
-			this.stacks = this.stacks[:index]
+			s.stacks = s.stacks[:index]
 		}
 	}
 	return ret

@@ -1,32 +1,47 @@
 package main
 
 import (
-    "log"
-    "net"
+	"log"
+	"net"
+	"time"
 )
 
 // establishing a TCP connection with Go's standard library
 func main() {
-    listener, err := net.Listen("tcp", "127.0.0.1:6379")
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer func() {
-        _ = listener.Close()
-    }()
-    log.Printf("bound to %q", listener.Addr())
-    for {
-        conn, err := listener.Accept()
-        if err != nil {
-            log.Fatal(err)
-        }
+	listener, err := net.Listen("tcp", ":8000")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		_ = listener.Close()
+	}()
+	log.Printf("bound to %q", listener.Addr())
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Fatal(err)
+		}
 
-        go func(c net.Conn) {
-            defer c.Close()
+		go handleConnection(conn)
+	}
+}
 
-            conn.Write([]byte("+konw"))
+func handleConnection(c net.Conn) {
+	defer func() {
+		_ = c.Close()
+	}()
+	log.Printf("new connection from %q", c.RemoteAddr())
+	for {
+		err := c.SetDeadline(time.Now().Add(time.Second * 1))
+		if err != nil {
+			log.Print(err)
+			return
+		}
 
-        }(conn)
-
-    }
+		_, err = c.Write([]byte("world\n"))
+		if err != nil {
+			log.Print(err)
+			return
+		}
+	}
 }
