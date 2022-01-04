@@ -1,12 +1,10 @@
 package leetcode
 
-// 该类用两个栈来实现一个队列
 type MyQueue struct {
 	inStack  Stack
 	outStack Stack
 }
 
-/** Initialize your data structure here. */
 func NewMyQueue() MyQueue {
 	return MyQueue{
 		inStack: Stack{

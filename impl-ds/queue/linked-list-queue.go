@@ -1,6 +1,6 @@
 package queue
 
-import "github.com/zchary-ma/go101/impl-ds/common"
+import "github.com/zchary-ma/impl-ds/common"
 
 type LinkedListQueue struct {
 	front, rear *common.Node

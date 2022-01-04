@@ -1,7 +1,7 @@
 package stack
 
 import (
-	"go101/DS_Alogrithms/common"
+	"github.com/zchary-ma/impl-ds/common"
 )
 
 type Stack interface {
